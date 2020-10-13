@@ -36,6 +36,10 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
     _stateController.close();
     _actionsController.close();
   }
+
+  void add(Action action) {
+    _actionsController.sink.add(action);
+  }
 }
 
 typedef void StateListener(State _);
