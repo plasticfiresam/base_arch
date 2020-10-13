@@ -4,6 +4,7 @@ abstract class Navigation {
   Future<void> pushNamed(String routeName);
   Future<void> pushReplacementNamed(String routeName);
   Future<void> popUntilAndPushNamed(String routeName);
+  Future<void> popAllAndPushNamed(String routeName);
   void pop();
 }
 
@@ -30,5 +31,11 @@ class NavigationImplementation extends Navigation {
   Future<void> popUntilAndPushNamed(String routeName) {
     navigation.currentState.popUntil((Route route) => route.isFirst);
     return navigation.currentState.pushNamed(routeName);
+  }
+
+  @override
+  Future<void> popAllAndPushNamed(String routeName) {
+    navigation.currentState.popUntil((Route route) => route.isFirst);
+    return navigation.currentState.pushReplacementNamed(routeName);
   }
 }
