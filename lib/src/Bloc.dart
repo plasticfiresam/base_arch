@@ -10,9 +10,9 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
 
   S _currentState;
 
-  Stream<State> get state => _stateController.stream;
+  Stream<S> get state => _stateController.stream;
   S get currentState => _currentState;
-  Sink<Action> get action => _actionsController.sink;
+  Sink<A> get action => _actionsController.sink;
   StateListener _stateListener;
 
   final Map<Type, R> _reducers;
