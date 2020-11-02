@@ -5,10 +5,10 @@ import 'Reducer.dart';
 import 'State.dart';
 
 abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
-  final _stateController = StreamController<State>.broadcast();
-  final _actionsController = StreamController<Action>();
+  final _stateController = StreamController<S>.broadcast();
+  final _actionsController = StreamController<A>();
 
-  var _currentState;
+  S currentState;
 
   Stream<State> get state => _stateController.stream;
   Sink<Action> get action => _actionsController.sink;
@@ -16,19 +16,20 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
 
   final Map<Type, R> _reducers;
 
-  Bloc(this._reducers, this._currentState) {
+  Bloc(this._reducers, S initialState) {
+    currentState = initialState;
     _actionsController.stream.listen(handleAction);
     _stateListener = (state) {
       _stateController.sink.add(state);
-      _currentState = state;
+      currentState = state;
     };
 
-    _stateController.add(_currentState);
+    _stateController.add(currentState);
   }
 
-  void handleAction(Action action) async {
+  void handleAction(A action) async {
     _reducers[action.runtimeType]
-        ?.call(_currentState, action)
+        ?.call(currentState, action)
         ?.listen(_stateListener);
   }
 
@@ -37,7 +38,7 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
     _actionsController.close();
   }
 
-  void add(Action action) {
+  void add(A action) {
     _actionsController.sink.add(action);
   }
 }
