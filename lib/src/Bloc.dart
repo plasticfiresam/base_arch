@@ -8,12 +8,12 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
   final _stateController = StreamController<S>.broadcast();
   final _actionsController = StreamController<A>();
 
-  S _currentState;
+  late S _currentState;
 
   Stream<S> get state => _stateController.stream;
   S get currentState => _currentState;
   Sink<A> get action => _actionsController.sink;
-  StateListener _stateListener;
+  late StateListener _stateListener;
 
   final Map<Type, R> _reducers;
 
@@ -21,7 +21,7 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
     _currentState = initialState;
     _actionsController.stream.listen(handleAction);
     _stateListener = (state) {
-      _stateController.sink.add(state);
+      _stateController.sink.add(state as S);
       _currentState = state;
     };
 
@@ -31,7 +31,7 @@ abstract class Bloc<S extends State, A extends Action, R extends Reducer> {
   void handleAction(A action) async {
     _reducers[action.runtimeType]
         ?.call(_currentState, action)
-        ?.listen(_stateListener);
+        .listen(_stateListener);
   }
 
   void dispose() {
