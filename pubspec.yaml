@@ -1,4 +1,4 @@
-name: base_arch
+name: arch
 description: Base app architecture
 
 publish_to: 'none'
