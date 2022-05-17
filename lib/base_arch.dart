@@ -1,4 +1,4 @@
-library base_arch;
+library arch;
 
 export './src/Action.dart';
 export './src/Navigation.dart';
